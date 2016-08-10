@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace Bomblix.SunnyPortal.Test
 {
@@ -6,8 +7,8 @@ namespace Bomblix.SunnyPortal.Test
     public class SunnyPortalTest
     {
 
-        private string userlogin = "YourLogin";
-        private string userPassword = "YourPassword";
+        private string userlogin = "email";
+        private string userPassword = "pass";
 
         [TestMethod]
         public void ConnectInvalidPasswordTest()
@@ -41,6 +42,18 @@ namespace Bomblix.SunnyPortal.Test
             var result = SunnyPortal.GetCurrentPower();
 
             Assert.AreNotEqual( -1, result );
+        }
+
+        [TestMethod]
+        public void DownloadDiagramDataTest()
+        {
+            var SunnyPortal = new SunnyPortal.Core.SunnyPortal( userlogin, userPassword );
+
+            SunnyPortal.Connect();
+            var result = SunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-2));
+
+            Assert.AreNotEqual( -1, result);
+
         }
     }
 }

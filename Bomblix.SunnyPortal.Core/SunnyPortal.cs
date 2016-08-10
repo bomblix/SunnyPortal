@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Net;
 using System.Text;
 
@@ -6,22 +9,6 @@ namespace Bomblix.SunnyPortal.Core
 {
     public class SunnyPortal
     {
-        private const string UserNameParameter = "ctl00$ContentPlaceHolder1$Logincontrol1$txtUserName";
-        private const string PasswordParameter = "ctl00$ContentPlaceHolder1$Logincontrol1$txtPassword";
-        private const string LoginButtonParameter = "ctl00$ContentPlaceHolder1$Logincontrol1$LoginBtn";
-        private const string ServiceAccessParameter = "ctl00$ContentPlaceHolder1$Logincontrol1$ServiceAccess";
-        private const string EventTargetParamerter = "__EVENTTARGET";
-        private const string EventArgumentParameter = "__EVENTARGUMENT";
-        private const string ViewStateParameter = "__VIEWSTATE";
-        private const string ViewStateGeneratorParameter = "__VIEWSTATEGENERATOR";
-        private const string HiddenLanguageParameter = "ctl00$ContentPlaceHolder1$hiddenLanguage";
-        private const string UserAgent = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.82 Safari/537.36 OPR/39.0.2256.43";
-        private const string RequestMethod = "POST";
-
-        private const string PortalUrl = "https://www.sunnyportal.com/";
-        private const string LoginUrl = "Templates/Start.aspx?logout=true";
-        private const string UserNameLabelName = "ctl00_Header_lblUserName";
-
         private readonly string password;
         private readonly string username;
         private CookieContainer container;
@@ -39,30 +26,35 @@ namespace Bomblix.SunnyPortal.Core
 
         public ConnectionResult Connect()
         {
+            if(string.IsNullOrEmpty(username) && string.IsNullOrEmpty( password ) )
+            {
+                throw new Exception( "Your login and password cannot be empty" );
+            }
 
             using ( CookieAwareWebClient wc = new CookieAwareWebClient() )
             {
-                wc.Headers.Add( HttpRequestHeader.UserAgent, UserAgent );
+                wc.Headers.Add( HttpRequestHeader.UserAgent, Constants.UserAgent );
 
                 var reguestParameters = new System.Collections.Specialized.NameValueCollection();
 
-                reguestParameters.Add( UserNameParameter, username );
-                reguestParameters.Add( PasswordParameter, password );
-                reguestParameters.Add( LoginButtonParameter, "Login" );
-                reguestParameters.Add( ServiceAccessParameter, true.ToString() );
-                reguestParameters.Add( EventTargetParamerter, string.Empty );
-                reguestParameters.Add( EventArgumentParameter, string.Empty );
-                reguestParameters.Add( ViewStateParameter, string.Empty );
-                reguestParameters.Add( ViewStateGeneratorParameter, string.Empty );
-                reguestParameters.Add( HiddenLanguageParameter, "en-us" );
+                reguestParameters.Add( Constants.UserNameParameter, username );
+                reguestParameters.Add( Constants.PasswordParameter, password );
+                reguestParameters.Add( Constants.LoginButtonParameter, "Login" );
+                reguestParameters.Add( Constants.ServiceAccessParameter, true.ToString() );
+                reguestParameters.Add( Constants.EventTargetParamerter, string.Empty );
+                reguestParameters.Add( Constants.EventArgumentParameter, string.Empty );
+                reguestParameters.Add( Constants.ViewStateParameter, string.Empty );
+                reguestParameters.Add( Constants.ViewStateGeneratorParameter, string.Empty );
+                reguestParameters.Add( Constants.HiddenLanguageParameter, Constants.PortalCulture );
 
 
-                byte[] responseBytes = wc.UploadValues( string.Concat( PortalUrl, "/", LoginUrl ), RequestMethod, reguestParameters );
+                byte[] responseBytes = wc.UploadValues( string.Concat( Constants.PortalUrl, "/", Constants.LoginUrl ), Constants.RequestMethod, reguestParameters );
+
                 string responseBody = Encoding.UTF8.GetString( responseBytes );
 
                 this.container = wc.CookieContainer;
 
-                this.IsConnected = responseBody.Contains( UserNameLabelName );
+                this.IsConnected = responseBody.Contains( Constants.UserNameLabelName );
 
                 return new ConnectionResult
                 {
@@ -73,9 +65,9 @@ namespace Bomblix.SunnyPortal.Core
 
         public int GetCurrentPower()
         {
-            if ( !this.IsConnected )
+            if ( !IsConnected )
             {
-                return -1;
+                throw new Exception( "You are not logged in SunnyPortal." );
             }
 
             using ( var z = new CookieAwareWebClient( container ) )
@@ -84,6 +76,46 @@ namespace Bomblix.SunnyPortal.Core
                 var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
                 return liveData.PV;
             }
+        }
+
+        public Dictionary<string,float> GetHistoricalData(DateTime date)
+        {
+            if ( !IsConnected )
+            {
+                throw new Exception( "You are not logged in SunnyPortal." );
+            }
+
+            var result = new Dictionary<string, float>();
+
+            using ( var webClient = new CookieAwareWebClient( container ) )
+            {
+                var requestParameters = new System.Collections.Specialized.NameValueCollection();
+
+                // Open inverter selection - without this cannot set the date to download data;
+                webClient.DownloadString( string.Concat( Constants.PortalUrl, Constants.SelectDate ) );
+
+                requestParameters.Add( Constants.EventTargetParamerter, Constants.DateSelectionDatePicker );
+                requestParameters.Add( Constants.DateSelectionIntervalId, "3" );
+                requestParameters.Add( Constants.DateSelectionDateTextBox, date.ToString( "d/M/yyyy" ) );
+
+                webClient.UploadValues( string.Concat( Constants.PortalUrl, Constants.SelectDate ), Constants.RequestMethod, requestParameters );
+
+                var csv = webClient.DownloadString( string.Concat( Constants.PortalUrl, Constants.DownloadUrl ) );
+
+                StringReader reader = new StringReader( csv );
+                var line = reader.ReadLine(); // skipped the first line
+                line = reader.ReadLine();
+                while ( !string.IsNullOrEmpty( line ) )
+                {
+                    var splitedValues = line.Split( ';' );
+                    if ( !string.IsNullOrEmpty( splitedValues[ 1 ] ) )
+                    {
+                        result.Add( splitedValues[ 0 ], float.Parse( splitedValues[ 1 ], CultureInfo.InvariantCulture ) );
+                    }
+                    line = reader.ReadLine();
+                }
+            }
+            return result;
         }
     }
 

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionResult.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="LiveData.cs" />
     <Compile Include="SunnyPortal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
