@@ -7,6 +7,13 @@ Simple use:
 
 ```
 var sunnyPortal = new SunnyPortal( userlogin, userPassword );
+
+// login to SunnyPortal
 sunnyPortal.Connect();
+
+// get current power
 var result = sunnyPortal.GetCurrentPower();
+
+// get data for yesterday
+var yesterday = sunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-1));
 ```
