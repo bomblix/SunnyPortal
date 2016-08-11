@@ -20,7 +20,7 @@ namespace Bomblix.SunnyPortal.Core
             {
                 float value;
                 var splitedValues = line.Split( ';' );
-                if ( !string.IsNullOrEmpty( splitedValues[ 1 ] ) && float.TryParse( splitedValues[ 1 ], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value ) )
+                if ( splitedValues.Length >= 2 && !string.IsNullOrEmpty( splitedValues[ 1 ] ) && float.TryParse( splitedValues[ 1 ], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value ) )
                 {
                     result.Add( splitedValues[ 0 ], value );
                 }
