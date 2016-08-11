@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Bomblix.SunnyPortal.Core;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace Bomblix.SunnyPortal.Test
@@ -52,8 +53,50 @@ namespace Bomblix.SunnyPortal.Test
             SunnyPortal.Connect();
             var result = SunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-2));
 
-            Assert.AreNotEqual( -1, result);
+            Assert.IsNotNull( result );
+        }
 
+        [TestMethod]
+        public void ExtractDataFromEmptyCsvTest()
+        {
+            var z = CsvHelper.ExtractToDictionary( "" );
+            Assert.AreEqual( 0, z.Count );
+        }
+
+        [TestMethod]
+        public void ExtractDataFromInvalidCsvTest()
+        {
+            var invalidCsv = 
+                @"test tehst <html>;asasas
+                laslkas;as;as;as;as;s
+                asasasas";
+
+            var z = CsvHelper.ExtractToDictionary( invalidCsv );
+            Assert.AreEqual( 0, z.Count );
+        }
+
+        [TestMethod]
+        public void ExtractDataFromValidCsvTest()
+        {
+            var invalidCsv =
+                @"Time;Value;
+                12:32;9.32;
+                1:30;3.2;";
+
+            var z = CsvHelper.ExtractToDictionary( invalidCsv );
+            Assert.AreEqual( 2, z.Count );
+        }
+
+        [TestMethod]
+        public void ExtractDataFromCsvWithOneColumn()
+        {
+            var invalidCsv =
+                @"Time
+                12:32
+                1:30";
+
+            var z = CsvHelper.ExtractToDictionary( invalidCsv );
+            Assert.AreEqual( 0, z.Count );
         }
     }
 }
