@@ -100,7 +100,6 @@ namespace Bomblix.SunnyPortal.Core
                 var csvContent = webClient.DownloadString( Constants.DownloadUrl );
 
                 return CsvHelper.ExtractToDictionary( csvContent );
-
             }
         }
     }
