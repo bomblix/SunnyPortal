@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Net;
 using System.Text;
 
@@ -11,14 +9,15 @@ namespace Bomblix.SunnyPortal.Core
     {
         private readonly string password;
         private readonly string username;
+
         private CookieContainer container;
 
         public bool IsConnected
         {
-            get; set;
+            get; private set;
         }
 
-        public SunnyPortal(string username, string password)
+        public SunnyPortal( string username, string password )
         {
             this.password = password;
             this.username = username;
@@ -26,7 +25,7 @@ namespace Bomblix.SunnyPortal.Core
 
         public ConnectionResult Connect()
         {
-            if(string.IsNullOrEmpty(username) && string.IsNullOrEmpty( password ) )
+            if ( string.IsNullOrEmpty( username ) && string.IsNullOrEmpty( password ) )
             {
                 throw new Exception( "Your login and password cannot be empty" );
             }
@@ -48,7 +47,7 @@ namespace Bomblix.SunnyPortal.Core
                 reguestParameters.Add( Constants.HiddenLanguageParameter, Constants.PortalCulture );
 
 
-                byte[] responseBytes = wc.UploadValues( string.Concat( Constants.PortalUrl, "/", Constants.LoginUrl ), Constants.RequestMethod, reguestParameters );
+                byte[] responseBytes = wc.UploadValues( Constants.LoginUrl, Constants.RequestMethod, reguestParameters );
 
                 string responseBody = Encoding.UTF8.GetString( responseBytes );
 
@@ -72,50 +71,37 @@ namespace Bomblix.SunnyPortal.Core
 
             using ( var z = new CookieAwareWebClient( container ) )
             {
-                string jsonResult = z.DownloadString( string.Format( "https://www.sunnyportal.com/homemanager?t={0}", DateTime.Now.Millisecond ) );
+                string jsonResult = z.DownloadString( string.Format( Constants.LiveDataUrl, DateTime.Now.Millisecond ) );
                 var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
                 return liveData.PV;
             }
         }
 
-        public Dictionary<string,float> GetHistoricalData(DateTime date)
+        public Dictionary<string, float> GetHistoricalData( DateTime date )
         {
             if ( !IsConnected )
             {
                 throw new Exception( "You are not logged in SunnyPortal." );
             }
 
-            var result = new Dictionary<string, float>();
-
             using ( var webClient = new CookieAwareWebClient( container ) )
             {
                 var requestParameters = new System.Collections.Specialized.NameValueCollection();
 
-                // Open inverter selection - without this cannot set the date to download data;
-                webClient.DownloadString( string.Concat( Constants.PortalUrl, Constants.SelectDate ) );
+                // Open inverter selection - without this cannot set the download date;
+                webClient.DownloadString( Constants.SelectDateUrl );
 
                 requestParameters.Add( Constants.EventTargetParamerter, Constants.DateSelectionDatePicker );
                 requestParameters.Add( Constants.DateSelectionIntervalId, "3" );
-                requestParameters.Add( Constants.DateSelectionDateTextBox, date.ToString( "d/M/yyyy" ) );
+                requestParameters.Add( Constants.DateSelectionDateTextBox, date.ToString( Constants.DateFormat ) );
 
-                webClient.UploadValues( string.Concat( Constants.PortalUrl, Constants.SelectDate ), Constants.RequestMethod, requestParameters );
+                webClient.UploadValues( Constants.SelectDateUrl, Constants.RequestMethod, requestParameters );
 
-                var csv = webClient.DownloadString( string.Concat( Constants.PortalUrl, Constants.DownloadUrl ) );
+                var csvContent = webClient.DownloadString( Constants.DownloadUrl );
 
-                StringReader reader = new StringReader( csv );
-                var line = reader.ReadLine(); // skipped the first line
-                line = reader.ReadLine();
-                while ( !string.IsNullOrEmpty( line ) )
-                {
-                    var splitedValues = line.Split( ';' );
-                    if ( !string.IsNullOrEmpty( splitedValues[ 1 ] ) )
-                    {
-                        result.Add( splitedValues[ 0 ], float.Parse( splitedValues[ 1 ], CultureInfo.InvariantCulture ) );
-                    }
-                    line = reader.ReadLine();
-                }
+                return CsvHelper.ExtractToDictionary( csvContent );
+
             }
-            return result;
         }
     }
 

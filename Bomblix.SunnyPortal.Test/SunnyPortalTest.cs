@@ -7,8 +7,8 @@ namespace Bomblix.SunnyPortal.Test
     public class SunnyPortalTest
     {
 
-        private string userlogin = "email";
-        private string userPassword = "pass";
+        private string userlogin = "user";
+        private string userPassword = "passw";
 
         [TestMethod]
         public void ConnectInvalidPasswordTest()

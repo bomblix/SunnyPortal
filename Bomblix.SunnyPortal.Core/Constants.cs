@@ -24,12 +24,15 @@ namespace Bomblix.SunnyPortal.Core
         internal const string DateSelectionDatePicker = "ctl00$ContentPlaceHolder1$UserControlShowInverterSelection1$_datePicker";
 
         internal const string PortalUrl = "https://www.sunnyportal.com/";
-        internal const string LoginUrl = "Templates/Start.aspx?logout=true";
-        internal const string DownloadUrl = "Templates/DownloadDiagram.aspx?down=diag";
-        internal const string SelectDate = "FixedPages/InverterSelection.aspx";
+        internal const string LoginUrl = PortalUrl + "Templates/Start.aspx?logout=true";
+        internal const string DownloadUrl = PortalUrl + "Templates/DownloadDiagram.aspx?down=diag";
+        internal const string SelectDateUrl = PortalUrl + "FixedPages/InverterSelection.aspx";
+        internal const string LiveDataUrl = PortalUrl + "homemanager?t={0}";
+
         internal const string UserNameLabelName = "ctl00_Header_lblUserName";
         internal const string PortalCulture = "en-us";
         internal const string DateSelectionIntervalId = "ctl00$ContentPlaceHolder1$UserControlShowInverterSelection1$SelectedIntervalID";
         internal const string DateSelectionDateTextBox = "ctl00$ContentPlaceHolder1$UserControlShowInverterSelection1$_datePicker$textBox";
+        internal const string DateFormat = "d/M/yyyy";
     }
 }
