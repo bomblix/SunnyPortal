@@ -7,9 +7,6 @@ namespace Bomblix.SunnyPortal.Core
 {
     public class SunnyPortal
     {
-        private readonly string password;
-        private readonly string username;
-
         private CookieContainer container;
 
         public bool IsConnected
@@ -17,13 +14,8 @@ namespace Bomblix.SunnyPortal.Core
             get; private set;
         }
 
-        public SunnyPortal( string username, string password )
-        {
-            this.password = password;
-            this.username = username;
-        }
 
-        public ConnectionResult Connect()
+        public ConnectionResult Connect( string username, string password )
         {
             if ( string.IsNullOrEmpty( username ) && string.IsNullOrEmpty( password ) )
             {
