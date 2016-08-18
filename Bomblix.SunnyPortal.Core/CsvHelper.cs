@@ -6,6 +6,11 @@ namespace Bomblix.SunnyPortal.Core
 {
     public static class CsvHelper
     {
+        private const char LineSpliter = ';';
+        private const int CsvColumnCount = 2;
+        private const int LabelColumnNumber = 0;
+        private const int ValueColumnNumber = 1;
+
         /// <summary>
         /// Method extracts data from csv to Dicionary
         /// </summary>
@@ -16,17 +21,33 @@ namespace Bomblix.SunnyPortal.Core
             StringReader reader = new StringReader( csvContent );
             var line = reader.ReadLine(); // skipped the first line
             line = reader.ReadLine();
+
             while ( !string.IsNullOrEmpty( line ) )
             {
+                string key;
                 float value;
-                var splitedValues = line.Split( ';' );
-                if ( splitedValues.Length >= 2 && !string.IsNullOrEmpty( splitedValues[ 1 ] ) && float.TryParse( splitedValues[ 1 ], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value ) )
+                if ( GetRowValues( line, out key, out value ) )
                 {
-                    result.Add( splitedValues[ 0 ], value );
+                    result.Add( key, value );
                 }
                 line = reader.ReadLine();
             }
             return result;
+        }
+
+        private static bool GetRowValues( string line, out string key, out float value )
+        {
+            var splitedValues = line.Split( LineSpliter );
+
+            if ( splitedValues.Length >= CsvColumnCount && !string.IsNullOrEmpty( splitedValues[ ValueColumnNumber ] ) )
+            {
+                key = splitedValues[ LabelColumnNumber ];
+                return float.TryParse( splitedValues[ ValueColumnNumber ], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out value );
+            }
+
+            key = null;
+            value = 0.0f;
+            return false;
         }
     }
 }
