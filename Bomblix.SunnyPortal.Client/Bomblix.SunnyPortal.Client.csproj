@@ -74,8 +74,22 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Controls\LiveDataControl.xaml.cs">
+      <DependentUpon>LiveDataControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Code\OpenWindowMessage.cs" />
+    <Compile Include="Services\WindowService.cs" />
+    <Compile Include="ViewModel\LiveDataModel.cs" />
+    <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="Windows\LogonWindow.xaml.cs">
+      <DependentUpon>LogonWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Controls\LiveDataControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -88,6 +102,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Windows\LogonWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -116,6 +134,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bomblix.SunnyPortal.Core\Bomblix.SunnyPortal.Core.csproj">
+      <Project>{22ff00d2-cb32-459e-aba5-ac869d540136}</Project>
+      <Name>Bomblix.SunnyPortal.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

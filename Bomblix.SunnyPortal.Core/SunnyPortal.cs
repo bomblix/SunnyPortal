@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -64,8 +65,16 @@ namespace Bomblix.SunnyPortal.Core
             using ( var z = new CookieAwareWebClient( container ) )
             {
                 string jsonResult = z.DownloadString( string.Format( Constants.LiveDataUrl, DateTime.Now.Millisecond ) );
-                var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
-                return liveData.PV;
+                try
+                {
+                    var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
+
+                    return liveData.PV;
+                }
+                catch ( JsonSerializationException )
+                {
+                    return 0;
+                }
             }
         }
 
