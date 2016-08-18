@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -7,9 +8,6 @@ namespace Bomblix.SunnyPortal.Core
 {
     public class SunnyPortal
     {
-        private readonly string password;
-        private readonly string username;
-
         private CookieContainer container;
 
         public bool IsConnected
@@ -17,13 +15,8 @@ namespace Bomblix.SunnyPortal.Core
             get; private set;
         }
 
-        public SunnyPortal( string username, string password )
-        {
-            this.password = password;
-            this.username = username;
-        }
 
-        public ConnectionResult Connect()
+        public ConnectionResult Connect( string username, string password )
         {
             if ( string.IsNullOrEmpty( username ) && string.IsNullOrEmpty( password ) )
             {
@@ -72,8 +65,16 @@ namespace Bomblix.SunnyPortal.Core
             using ( var z = new CookieAwareWebClient( container ) )
             {
                 string jsonResult = z.DownloadString( string.Format( Constants.LiveDataUrl, DateTime.Now.Millisecond ) );
-                var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
-                return liveData.PV;
+                try
+                {
+                    var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
+
+                    return liveData.PV;
+                }
+                catch ( JsonSerializationException )
+                {
+                    return 0;
+                }
             }
         }
 

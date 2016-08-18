@@ -1,0 +1,30 @@
+﻿<Window x:Class="Bomblix.SunnyPortal.Client.Windows.LogonWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bomblix.SunnyPortal.Client.Windows"
+        mc:Ignorable="d"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Login}"
+        Title="Please provide login and password" Height="220" Width="400" MinWidth="400" MinHeight="220" MaxWidth="400" MaxHeight="220">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Label Content="Login:" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <Label Content="Password:" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+
+        <TextBox Text="{Binding UserName}" Grid.Column="1" Margin="20"/>
+        <PasswordBox Grid.Column="1" Grid.Row="1" Margin="20" Name="PasswordBox" />
+
+        <Button Content="OK" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}" Margin="20" Width="100" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+    </Grid>
+</Window>

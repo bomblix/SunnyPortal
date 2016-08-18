@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Bomblix.SunnyPortal.Client.Windows;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Bomblix.SunnyPortal.Client
 {
@@ -23,6 +11,37 @@ namespace Bomblix.SunnyPortal.Client
         public MainWindow()
         {
             InitializeComponent();
+
+            // To improve... Temporary version
+            GalaSoft.MvvmLight.Messaging.Messenger.Default.Register<OpenWindowMessage>( this, ( message ) =>
+            {
+                Window window = null;
+
+                if ( message.WindowToOpen == WindowsToOpen.Login )
+                {
+                    window = new LogonWindow();
+                }
+
+                else if (message.WindowToOpen == WindowsToOpen.MessageBox )
+                {
+                    MessageBox.Show( message.Text, message.Caption );
+                    return;
+                }
+
+                if ( window == null )
+                {
+                    return;
+                }
+
+                if ( message.IsModal )
+                {
+                    window.ShowDialog();
+                    return;
+                }
+
+                window.Show();
+
+            } );
         }
     }
 }

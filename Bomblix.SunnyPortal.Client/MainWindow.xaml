@@ -4,9 +4,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Bomblix.SunnyPortal.Client"
+        xmlns:controls="clr-namespace:Bomblix.SunnyPortal.Client.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        Title="SunnyPortal client by bomblix" Height="225" Width="225" MinWidth="225" MinHeight="225" MaxWidth="225" MaxHeight="225">
     <Grid>
-        
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="35" />
+        </Grid.RowDefinitions>
+
+        <ToolBarPanel>
+            <ToolBar>
+                <Button Content="Connect" Command="{Binding LogInCommand}" IsEnabled="{Binding CanUserConnecting}"/>
+            </ToolBar>
+        </ToolBarPanel>
+        <controls:LiveDataControl Grid.Row="1"></controls:LiveDataControl>
+
+        <StatusBar Grid.Row="2">
+            <Label Content="{Binding ConnectionStatus }"/>
+        </StatusBar>
     </Grid>
 </Window>
