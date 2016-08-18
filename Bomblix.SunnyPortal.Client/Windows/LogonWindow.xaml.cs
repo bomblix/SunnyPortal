@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GalaSoft.MvvmLight.Messaging;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Bomblix.SunnyPortal.Client.Windows
 {
@@ -22,6 +11,15 @@ namespace Bomblix.SunnyPortal.Client.Windows
         public LogonWindow()
         {
             InitializeComponent();
+
+            // FIX: Find better way...
+            Messenger.Default.Register<Messages>( this, x =>
+            {
+                if ( x == Messages.IsLoggedIn )
+                {
+                    this.Close();
+                }
+            } );
         }
     }
 }

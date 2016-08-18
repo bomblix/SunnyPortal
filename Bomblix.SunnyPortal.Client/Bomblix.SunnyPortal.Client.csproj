@@ -74,11 +74,11 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Code\Misc.cs" />
     <Compile Include="Controls\LiveDataControl.xaml.cs">
       <DependentUpon>LiveDataControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Code\OpenWindowMessage.cs" />
-    <Compile Include="Services\WindowService.cs" />
     <Compile Include="ViewModel\LiveDataModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -140,6 +140,9 @@
       <Project>{22ff00d2-cb32-459e-aba5-ac869d540136}</Project>
       <Name>Bomblix.SunnyPortal.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

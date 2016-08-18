@@ -34,9 +34,9 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
             timer.Elapsed += Timer_Elapsed;
             timer.AutoReset = true;
 
-            Messenger.Default.Register<string>( this, ( x ) =>
+            Messenger.Default.Register<Messages>( this, ( x ) =>
             {
-                if ( x == "LoggedIn" )
+                if ( x == Messages.IsLoggedIn )
                 {
                     this.CurrentPower = sunnyPortal.GetCurrentPower();
                     this.timer.Start();

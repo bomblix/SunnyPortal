@@ -18,7 +18,7 @@
 
         <ToolBarPanel>
             <ToolBar>
-                <Button Content="Connect" Command="{Binding LogInCommand}" IsEnabled="{Binding !IsConnected}"/>
+                <Button Content="Connect" Command="{Binding LogInCommand}" IsEnabled="{Binding CanUserConnecting}"/>
             </ToolBar>
         </ToolBarPanel>
         <controls:LiveDataControl Grid.Row="1"></controls:LiveDataControl>

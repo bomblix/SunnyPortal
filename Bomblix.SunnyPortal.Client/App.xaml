@@ -2,7 +2,6 @@
   <Application.Resources>
     <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:Bomblix.SunnyPortal.Client.ViewModel" />
-            <ws:WindowService x:Key="WindowService" xmlns:ws="clr-namespace:Bomblix.SunnyPortal.Client.Services" />
         </ResourceDictionary>
   </Application.Resources>
 </Application>

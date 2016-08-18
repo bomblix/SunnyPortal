@@ -1,11 +1,5 @@
 ﻿namespace Bomblix.SunnyPortal.Client
 {
-    public enum WindowsToOpen
-    {
-        Login,
-        MessageBox,
-    }
-
     internal class OpenWindowMessage
     {
         public WindowsToOpen WindowToOpen

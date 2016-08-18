@@ -7,39 +7,36 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private string connectionStatus;
-        private bool isConnected;
-
         private Core.SunnyPortal sunnyPortal;
+        private bool canUserConnecting;
 
-        public MainViewModel(Core.SunnyPortal sunnyPortal)
+        public MainViewModel( Core.SunnyPortal sunnyPortal )
         {
             this.sunnyPortal = sunnyPortal;
-            connectionStatus = "Disconneted";
+            this.CanUserConnecting = true;
 
-            Messenger.Default.Register<string>( this, ( x ) =>
+            Messenger.Default.Register<Messages>( this, ( x ) =>
             {
-                if ( x == "LoggedIn" )
+                if ( x == Messages.IsLoggedIn )
                 {
                     HandleMessage();
                 }
             } );
-
-
         }
 
-        public bool IsConnected
+        public bool CanUserConnecting
         {
             get
             {
-                return isConnected;
+                return canUserConnecting;
             }
             set
             {
-                if ( value != isConnected )
+                if ( value != canUserConnecting )
                 {
-                    isConnected = value;
+                    canUserConnecting = value;
                     RaisePropertyChanged();
+                    RaisePropertyChanged( "ConnectionStatus" );
                 }
             }
         }
@@ -48,15 +45,7 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
         {
             get
             {
-                return connectionStatus;
-            }
-            set
-            {
-                if ( value != connectionStatus )
-                {
-                    connectionStatus = value;
-                    RaisePropertyChanged();
-                }
+                return CanUserConnecting ? "Disconneted" : "Connected";
             }
         }
 
@@ -64,18 +53,23 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
         {
             get
             {
-                return new RelayCommand( LogIn );
+                return new RelayCommand( OnLogin );
             }
         }
 
-        private void LogIn()
+        private void OnLogin()
         {
-            Messenger.Default.Send<OpenWindowMessage>( new OpenWindowMessage { IsModal = true, WindowToOpen = WindowsToOpen.Login } );
+            Messenger.Default.Send<OpenWindowMessage>( 
+                new OpenWindowMessage
+                {
+                    IsModal = true,
+                    WindowToOpen = WindowsToOpen.Login
+                } );
         }
 
         private void HandleMessage()
         {
-            this.IsConnected = sunnyPortal.IsConnected;
+            this.CanUserConnecting = !sunnyPortal.IsConnected;
         }
     }
 }
