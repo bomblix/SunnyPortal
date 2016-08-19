@@ -31,7 +31,6 @@ Currently client display only current system production.
 #What I want to create in close future:
 
 Client:
-- [ ] - Anysnchronous wpf client
 - [ ] - Display daily, monthly etc. data
 - [ ] - Application settings
 
