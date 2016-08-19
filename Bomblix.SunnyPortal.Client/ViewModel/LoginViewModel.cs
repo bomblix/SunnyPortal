@@ -40,9 +40,9 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
         }
 
 
-        private void OnLogin( System.Windows.Controls.PasswordBox password )
+        private async void OnLogin( System.Windows.Controls.PasswordBox password )
         {
-            sunnyPortal.Connect( UserName, password.Password );
+            await sunnyPortal.Connect( UserName, password.Password );
 
             if ( sunnyPortal.IsConnected )
             {
