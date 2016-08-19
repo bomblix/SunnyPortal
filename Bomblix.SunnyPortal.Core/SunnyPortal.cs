@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
+using System.Linq;
+using System.Web;
 
 namespace Bomblix.SunnyPortal.Core
 {
@@ -16,7 +19,7 @@ namespace Bomblix.SunnyPortal.Core
         }
 
 
-        public ConnectionResult Connect( string username, string password )
+        public async Task<ConnectionResult> Connect( string username, string password )
         {
             if ( string.IsNullOrEmpty( username ) && string.IsNullOrEmpty( password ) )
             {
@@ -39,8 +42,7 @@ namespace Bomblix.SunnyPortal.Core
                 reguestParameters.Add( Constants.ViewStateGeneratorParameter, string.Empty );
                 reguestParameters.Add( Constants.HiddenLanguageParameter, Constants.PortalCulture );
 
-
-                byte[] responseBytes = wc.UploadValues( Constants.LoginUrl, Constants.RequestMethod, reguestParameters );
+                byte[] responseBytes = await wc.UploadValuesTaskAsync( Constants.LoginUrl, Constants.RequestMethod,reguestParameters);
 
                 string responseBody = Encoding.UTF8.GetString( responseBytes );
 
@@ -55,7 +57,7 @@ namespace Bomblix.SunnyPortal.Core
             }
         }
 
-        public int GetCurrentPower()
+        public async Task<int> GetCurrentPower()
         {
             if ( !IsConnected )
             {
@@ -64,7 +66,7 @@ namespace Bomblix.SunnyPortal.Core
 
             using ( var z = new CookieAwareWebClient( container ) )
             {
-                string jsonResult = z.DownloadString( string.Format( Constants.LiveDataUrl, DateTime.Now.Millisecond ) );
+                string jsonResult = await z.DownloadStringTaskAsync( new Uri( string.Format( Constants.LiveDataUrl, DateTime.Now.Millisecond ) ) );
                 try
                 {
                     var liveData = Newtonsoft.Json.JsonConvert.DeserializeObject<LiveData>( jsonResult );
@@ -78,7 +80,7 @@ namespace Bomblix.SunnyPortal.Core
             }
         }
 
-        public Dictionary<string, float> GetHistoricalData( DateTime date )
+        public async Task<Dictionary<string, float>> GetHistoricalData( DateTime date )
         {
             if ( !IsConnected )
             {
@@ -98,7 +100,7 @@ namespace Bomblix.SunnyPortal.Core
 
                 webClient.UploadValues( Constants.SelectDateUrl, Constants.RequestMethod, requestParameters );
 
-                var csvContent = webClient.DownloadString( Constants.DownloadUrl );
+                var csvContent = await webClient.DownloadStringTaskAsync( Constants.DownloadUrl );
 
                 return CsvHelper.ExtractToDictionary( csvContent );
             }

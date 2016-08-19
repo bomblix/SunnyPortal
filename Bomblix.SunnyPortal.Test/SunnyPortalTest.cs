@@ -1,6 +1,7 @@
 ﻿using Bomblix.SunnyPortal.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Threading.Tasks;
 
 namespace Bomblix.SunnyPortal.Test
 {
@@ -12,11 +13,11 @@ namespace Bomblix.SunnyPortal.Test
         private string userPassword = "passw";
 
         [TestMethod]
-        public void ConnectInvalidPasswordTest()
+        public async Task ConnectInvalidPasswordTest()
         {
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal();
 
-            var result = SunnyPortal.Connect( "user", "user" );
+            var result = await SunnyPortal.Connect( "user", "user" );
 
             Assert.IsFalse( SunnyPortal.IsConnected );
             Assert.AreEqual( result.Message, "Invalid login or password" );
@@ -24,33 +25,33 @@ namespace Bomblix.SunnyPortal.Test
 
 
         [TestMethod]
-        public void ConnectSuccessfullTest()
+        public async Task ConnectSuccessfullTest()
         {
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal( );
 
-            var result = SunnyPortal.Connect( userlogin, userPassword );
+            var result = await SunnyPortal.Connect( userlogin, userPassword );
 
             Assert.IsTrue( SunnyPortal.IsConnected );
             Assert.AreEqual( result.Message, string.Empty );
         }
 
         [TestMethod]
-        public void GetCurrentPowerTest()
+        public async Task GetCurrentPowerTest()
         {
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal( );
 
-            SunnyPortal.Connect( userlogin, userPassword );
+            await SunnyPortal.Connect( userlogin, userPassword );
             var result = SunnyPortal.GetCurrentPower();
 
             Assert.AreNotEqual( -1, result );
         }
 
         [TestMethod]
-        public void DownloadDiagramDataTest()
+        public async Task DownloadDiagramDataTest()
         {
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal();
 
-            SunnyPortal.Connect (userlogin, userPassword );
+            await SunnyPortal.Connect (userlogin, userPassword );
             var result = SunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-2));
 
             Assert.IsNotNull( result );
