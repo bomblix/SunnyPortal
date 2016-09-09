@@ -41,7 +41,7 @@ namespace Bomblix.SunnyPortal.Test
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal( );
 
             await SunnyPortal.Connect( userlogin, userPassword );
-            var result = SunnyPortal.GetCurrentPower();
+            var result = await SunnyPortal.GetCurrentPower();
 
             Assert.AreNotEqual( -1, result );
         }
@@ -52,7 +52,7 @@ namespace Bomblix.SunnyPortal.Test
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal();
 
             await SunnyPortal.Connect (userlogin, userPassword );
-            var result = SunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-2));
+            var result = await SunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-2));
 
             Assert.IsNotNull( result );
         }
