@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Web;
 
 namespace Bomblix.SunnyPortal.Core
 {
@@ -95,9 +93,8 @@ namespace Bomblix.SunnyPortal.Core
                 webClient.DownloadString( Constants.SelectDateUrl );
 
                 requestParameters.Add( Constants.EventTargetParamerter, Constants.DateSelectionDatePicker );
-                requestParameters.Add( Constants.DateSelectionIntervalId, "3" );
+                requestParameters.Add( Constants.DateSelectionIntervalId, "2" );
                 requestParameters.Add( Constants.DateSelectionDateTextBox, date.ToString( Constants.DateFormat ) );
-
                 webClient.UploadValues( Constants.SelectDateUrl, Constants.RequestMethod, requestParameters );
 
                 var csvContent = await webClient.DownloadStringTaskAsync( Constants.DownloadUrl );
