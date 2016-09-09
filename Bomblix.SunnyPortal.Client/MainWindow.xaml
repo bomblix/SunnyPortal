@@ -7,7 +7,7 @@
         xmlns:controls="clr-namespace:Bomblix.SunnyPortal.Client.Controls"
         mc:Ignorable="d"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        Title="SunnyPortal client by bomblix" Height="225" Width="225" MinWidth="225" MinHeight="225" MaxWidth="225" MaxHeight="225">
+        Title="SunnyPortal client by bomblix" Height="500" Width="500" MinWidth="500" MinHeight="500" MaxWidth="500" MaxHeight="500">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -21,8 +21,16 @@
                 <Button Content="Connect" Command="{Binding LogInCommand}" IsEnabled="{Binding CanUserConnecting}"/>
             </ToolBar>
         </ToolBarPanel>
-        <controls:LiveDataControl Grid.Row="1"></controls:LiveDataControl>
 
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <controls:LiveDataControl Grid.Row="0" />
+            <controls:DailyData Grid.Column="1" />
+        </Grid>
         <StatusBar Grid.Row="2">
             <Label Content="{Binding ConnectionStatus }"/>
         </StatusBar>
