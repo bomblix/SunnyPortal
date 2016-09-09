@@ -3,10 +3,6 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Bomblix.SunnyPortal.Client.ViewModel
 {
-    /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
-    /// </summary>
     public class ViewModelLocator
     {
         /// <summary>
@@ -21,6 +17,7 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<LiveDataModel>();
             SimpleIoc.Default.Register<LoginViewModel>();
+            SimpleIoc.Default.Register<DailyDataViewModel>();
         }
 
         public MainViewModel Main
@@ -46,6 +43,15 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
                 return ServiceLocator.Current.GetInstance<LoginViewModel>();
             }
         }
+
+        public DailyDataViewModel DailyData
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DailyDataViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

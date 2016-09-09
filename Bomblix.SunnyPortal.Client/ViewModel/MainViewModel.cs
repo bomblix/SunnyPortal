@@ -59,7 +59,7 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
 
         private void OnLogin()
         {
-            Messenger.Default.Send<OpenWindowMessage>( 
+            Messenger.Default.Send(
                 new OpenWindowMessage
                 {
                     IsModal = true,
