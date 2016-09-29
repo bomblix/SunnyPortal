@@ -25,7 +25,7 @@ namespace Bomblix.SunnyPortal.Client.ViewModel
 
         private async void LoadPoints()
         {
-            var todaysData = await sunnyPortal.GetHistoricalData( DateTime.Today );
+            var todaysData = await sunnyPortal.GetHistoricalDailyData( DateTime.Today );
             var points = new List<DataPoint>();
 
             var i = 0;

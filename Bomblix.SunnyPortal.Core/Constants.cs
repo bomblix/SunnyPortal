@@ -34,5 +34,7 @@ namespace Bomblix.SunnyPortal.Core
         internal const string DateSelectionIntervalId = "ctl00$ContentPlaceHolder1$UserControlShowInverterSelection1$SelectedIntervalID";
         internal const string DateSelectionDateTextBox = "ctl00$ContentPlaceHolder1$UserControlShowInverterSelection1$_datePicker$textBox";
         internal const string DateFormat = "d/M/yyyy";
+
+        internal const string LoginButtonValue = "Login";
     }
 }

@@ -52,7 +52,7 @@ namespace Bomblix.SunnyPortal.Test
             var SunnyPortal = new SunnyPortal.Core.SunnyPortal();
 
             await SunnyPortal.Connect (userlogin, userPassword );
-            var result = await SunnyPortal.GetHistoricalData(DateTime.Now.AddDays(-2));
+            var result = await SunnyPortal.GetHistoricalDailyData(DateTime.Now.AddDays(-2));
 
             Assert.IsNotNull( result );
         }
