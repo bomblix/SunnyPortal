@@ -32,7 +32,7 @@ namespace Bomblix.SunnyPortal.Core
 
                 reguestParameters.Add( Constants.UserNameParameter, username );
                 reguestParameters.Add( Constants.PasswordParameter, password );
-                reguestParameters.Add( Constants.LoginButtonParameter, "Login" );
+                reguestParameters.Add( Constants.LoginButtonParameter, Constants.LoginButtonValue );
                 reguestParameters.Add( Constants.ServiceAccessParameter, true.ToString() );
                 reguestParameters.Add( Constants.EventTargetParamerter, string.Empty );
                 reguestParameters.Add( Constants.EventArgumentParameter, string.Empty );
@@ -78,7 +78,7 @@ namespace Bomblix.SunnyPortal.Core
             }
         }
 
-        public async Task<Dictionary<string, float>> GetHistoricalData( DateTime date )
+        public async Task<Dictionary<string, float>> GetHistoricalDailyData( DateTime date )
         {
             if ( !IsConnected )
             {
